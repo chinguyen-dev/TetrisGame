@@ -7,10 +7,11 @@ import model.Board;
 import view.component.BoardComponent;
 
 public class BoardController {
-    private final Board model;
+    private final Board board;
     private final BoardComponent boardComponent;
+
     public BoardController(BoardComponent component) {
-        this.model = Board.getInstance();
+        this.board = Board.getInstance();
         this.boardComponent = component;
         this.action();
     }
@@ -25,18 +26,18 @@ public class BoardController {
 
             @Override
             public void keyReleased(KeyEvent e) {
-                int keyCode = e.getKeyCode();
-                if (keyCode == KeyEvent.VK_DOWN) {
-                    model.setDelayTime(600);
-                } else if (keyCode == KeyEvent.VK_RIGHT) {
-                    model.setPositionX(1);
-                } else if (keyCode == KeyEvent.VK_LEFT) {
-                    model.setPositionX(-1);
+                int positionX = 0;
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_DOWN -> board.setDelayTime(600);
+                    case KeyEvent.VK_RIGHT -> positionX = 1;
+                    case KeyEvent.VK_LEFT -> positionX = -1;
                 }
+                board.getCurrentShape().moveHorizontal(positionX);
             }
+
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_DOWN) model.setDelayTime(50);
+                if (e.getKeyCode() == KeyEvent.VK_DOWN) board.setDelayTime(50);
             }
         });
     }

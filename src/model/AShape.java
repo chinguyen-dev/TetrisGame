@@ -28,11 +28,11 @@ public abstract class AShape {
         return this.y + 1 + this.element.length > Board.BOARD_HEIGHT;
     }
 
-    public boolean checkVerticalForMovement(Color[][] board, int positionX) {
+    public boolean checkVerticalForMovement(Color[][] board) {
         for (int raw = 0; raw < this.element.length; raw++) {
             for (int col = 0; col < this.element[raw].length; col++) {
                 if (this.element[raw][col] != 0)
-                    if (board[this.y + 1 + raw][this.x + positionX + col] != null) {
+                    if (board[this.y + 1 + raw][this.x + col] != null) {
                         return true;
                     }
             }
@@ -43,18 +43,23 @@ public abstract class AShape {
     public int[][] getElement() {
         return element;
     }
+
     public int getX() {
         return x;
     }
+
     public int getY() {
         return y;
     }
+
     public int getSize() {
         return size;
     }
+
     public Color getColor() {
         return color;
     }
+
     public void setColor(Color color) {
         this.color = color;
     }
