@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import model.Board;
-import view.BoardComponent;
+import view.component.BoardComponent;
 
 public class BoardController {
     private final Board model;
@@ -27,7 +27,7 @@ public class BoardController {
             public void keyReleased(KeyEvent e) {
                 int keyCode = e.getKeyCode();
                 if (keyCode == KeyEvent.VK_DOWN) {
-                    model.setDelayTime(Board.SPEED_NORMAL);
+                    model.setDelayTime(600);
                 } else if (keyCode == KeyEvent.VK_RIGHT) {
                     model.setPositionX(1);
                 } else if (keyCode == KeyEvent.VK_LEFT) {
@@ -36,7 +36,7 @@ public class BoardController {
             }
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_DOWN) model.setDelayTime(Board.SPEED_FAST);
+                if (e.getKeyCode() == KeyEvent.VK_DOWN) model.setDelayTime(50);
             }
         });
     }

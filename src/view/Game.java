@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 
 import controller.BoardController;
 import model.Board;
+import view.component.BoardComponent;
 
 public class Game extends JFrame {
 	private final BoardComponent boardComponent;
@@ -22,9 +23,5 @@ public class Game extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.add(this.boardComponent);
 		this.setVisible(true);
-	}
-
-	public static void main(String[] args) {
-		new Game("Tetris game", 445, 629);
 	}
 }
