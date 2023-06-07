@@ -20,8 +20,9 @@ public abstract class AShape {
     }
 
     public void moveHorizontal(int position) {
-        if (!(this.x + this.element[0].length + position > Board.BOARD_WIDTH) && !(this.x + position < 0))
+        if (!(this.x + this.element[0].length + position > Board.BOARD_WIDTH) && !(this.x + position < 0)){
             this.x += position;
+        }
     }
 
     public boolean checkCollideBelow() {
@@ -31,10 +32,7 @@ public abstract class AShape {
     public boolean checkVerticalForMovement(Color[][] board) {
         for (int raw = 0; raw < this.element.length; raw++) {
             for (int col = 0; col < this.element[raw].length; col++) {
-                if (this.element[raw][col] != 0)
-                    if (board[this.y + 1 + raw][this.x + col] != null) {
-                        return true;
-                    }
+                if (this.element[raw][col] != 0 && (board[this.y + 1 + raw][this.x + col] != null)) return true;
             }
         }
         return false;

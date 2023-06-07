@@ -1,7 +1,14 @@
 package model.patterns.factory;
 
+
 import model.AShape;
 
+import java.awt.*;
+
 public interface IShapeFactory {
-    AShape getRandomShape();
+    ShapeType getRandomShape();
+
+    Color getRandomColor();
+
+    AShape generateShape(ShapeType type, Color color);
 }

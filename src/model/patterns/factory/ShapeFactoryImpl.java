@@ -24,26 +24,28 @@ public class ShapeFactoryImpl implements IShapeFactory {
     }
 
     @Override
-    public AShape getRandomShape() {
-        String shape = "TZOLISJ";
-        int shapeIndex = this.random.nextInt(shape.length());
-        int colorIndex = this.random.nextInt(this.colors.length);
-        String shapeType = Character.toString(shape.charAt(shapeIndex));
-        Color color = this.colors[colorIndex];
-        return this.generateShape(shapeType, color);
+    public ShapeType getRandomShape() {
+        ShapeType[] shapeTypes = ShapeType.values();
+        return shapeTypes[this.random.nextInt(shapeTypes.length)];
     }
 
-    public AShape generateShape(String type, Color color) {
-        AShape shape = null;
-        switch (type.toUpperCase()) {
-            case "T" -> shape = new ShapeT(color);
-            case "Z" -> shape = new ShapeZ(color);
-            case "O" -> shape = new ShapeO(color);
-            case "L" -> shape = new ShapeL(color);
-            case "I" -> shape = new ShapeI(color);
-            case "S" -> shape = new ShapeS(color);
-            case "J" -> shape = new ShapeJ(color);
-            default -> System.out.println("Generate failed with type: " + type);
+    @Override
+    public Color getRandomColor() {
+        return this.colors[this.random.nextInt(this.colors.length)];
+    }
+
+    @Override
+    public AShape generateShape(ShapeType type, Color color) {
+        AShape shape;
+        switch (type) {
+            case SHAPE_T -> shape = new ShapeT(color);
+            case SHAPE_Z -> shape = new ShapeZ(color);
+            case SHAPE_O -> shape = new ShapeO(color);
+            case SHAPE_L -> shape = new ShapeL(color);
+            case SHAPE_I -> shape = new ShapeI(color);
+            case SHAPE_S -> shape = new ShapeS(color);
+            case SHAPE_J -> shape = new ShapeJ(color);
+            default -> throw new RuntimeException("Generate shape failed with type: " + type);
         }
         return shape;
     }

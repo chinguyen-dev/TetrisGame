@@ -1,14 +1,14 @@
 package model;
 
-import model.patterns.factory.IShapeFactory;
-import model.patterns.factory.ShapeFactoryImpl;
+import model.patterns.factory.ShapeFactory;
+import model.patterns.observer.Observable;
 
 import java.awt.*;
 
-public class Board {
+public class Board extends Observable {
     public static final int BOARD_WIDTH = 10, BOARD_HEIGHT = 20;
     private static Board instance;
-    private final IShapeFactory factory;
+    private final ShapeFactory shapeFactory;
     private final Color[][] shapesFreeze;
     private long beginTime;
     private int delayTime = 600;
@@ -16,8 +16,9 @@ public class Board {
     private AShape currentShape;
 
     private Board() {
+        super();
         this.shapesFreeze = new Color[BOARD_HEIGHT][BOARD_WIDTH];
-        this.factory = ShapeFactoryImpl.getInstance();
+        this.shapeFactory = ShapeFactory.getInstance();
         this.currentShape = this.getNewShape();
     }
 
@@ -43,7 +44,7 @@ public class Board {
     }
 
     public AShape getNewShape() {
-        return this.factory.getRandomShape();
+        return this.shapeFactory.createShape();
     }
 
     public void state() {
