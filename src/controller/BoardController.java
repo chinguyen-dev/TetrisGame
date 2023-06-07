@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import model.Board;
+import model.StateGame;
 import view.component.BoardComponent;
 
 public class BoardController {
@@ -27,11 +28,17 @@ public class BoardController {
             @Override
             public void keyReleased(KeyEvent e) {
                 int positionX = 0;
+                StateGame stateGame = board.getStateGame();
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_DOWN -> board.setDelayTime(600);
                     case KeyEvent.VK_RIGHT -> positionX = 1;
                     case KeyEvent.VK_LEFT -> positionX = -1;
+                    case KeyEvent.VK_SPACE -> {
+                        if (board.getStateGame() == StateGame.PLAY) stateGame = StateGame.PAUSE;
+                        if (board.getStateGame() == StateGame.PAUSE) stateGame = StateGame.PLAY;
+                    }
                 }
+                board.setStateGame(stateGame);
                 board.getCurrentShape().moveHorizontal(positionX, board.getWidth());
             }
 

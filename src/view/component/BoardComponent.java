@@ -2,8 +2,8 @@ package view.component;
 
 import model.AShape;
 import model.Board;
-import model.patterns.observer.Observable;
-import model.patterns.observer.Observer;
+import model.StateGame;
+import model.patterns.observer.*;
 import model.patterns.strategy.ObjectStrategy;
 
 import javax.swing.*;
@@ -15,6 +15,7 @@ public class BoardComponent extends JPanel implements Observer, ObjectStrategy {
     private int boardHeight;
     private int boardWidth;
     private final Board board;
+    private StateGame stateGame;
 
     public BoardComponent(Board board) {
         this.board = board;
@@ -42,6 +43,11 @@ public class BoardComponent extends JPanel implements Observer, ObjectStrategy {
         this.drawShapeFreeze(g);
 
         this.drawBoard(g);
+
+        if (stateGame == StateGame.OVER) {
+            g.setColor(Color.white);
+            g.drawString("Game Over", 130, 200);
+        }
     }
 
     public void drawShape(Graphics g) {
@@ -94,6 +100,7 @@ public class BoardComponent extends JPanel implements Observer, ObjectStrategy {
             this.currentShape = b.getCurrentShape();
             this.boardWidth = b.getWidth();
             this.boardHeight = b.getHeight();
+            this.stateGame = b.getStateGame();
         }
     }
 }

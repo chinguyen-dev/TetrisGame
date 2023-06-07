@@ -6,10 +6,11 @@ import model.patterns.observer.Observable;
 import java.awt.*;
 
 public class Board extends Observable {
-    private int width, height;
+    private final int width, height;
     private final ShapeFactory shapeFactory;
     private final Color[][] shapesFreeze;
     private long beginTime;
+    private StateGame stateGame;
     private int delayTime;
     private boolean collision = false;
     private AShape currentShape;
@@ -19,12 +20,13 @@ public class Board extends Observable {
         this.width = width;
         this.height = height;
         this.delayTime = delayTime;
+        this.stateGame = StateGame.PLAY;
         this.shapesFreeze = new Color[this.height][this.width];
         this.shapeFactory = ShapeFactory.getInstance();
         this.currentShape = this.getNewShape();
     }
 
-    public void createNewShape() {
+    private void createNewShape() {
         if (this.collision) {
             int[][] element = this.currentShape.getElement();
             for (int row = 0; row < element.length; row++) {
@@ -37,23 +39,26 @@ public class Board extends Observable {
             this.checkLine();
             this.currentShape = this.getNewShape();
             this.collision = !this.collision;
+            this.checkOverGame();
         }
     }
 
-    public AShape getNewShape() {
+    private AShape getNewShape() {
         return this.shapeFactory.createShape();
     }
 
     public void state() {
-        this.createNewShape();
-        if (System.currentTimeMillis() - this.beginTime > this.delayTime) {
-            if (!this.currentShape.checkCollideBelow(this.height)) {
-                this.collision = this.currentShape.checkVerticalForMovement(this.shapesFreeze);
-                if (!collision) this.currentShape.moveDown();
-            } else {
-                this.collision = true;
+        if (this.stateGame == StateGame.PLAY) {
+            this.createNewShape();
+            if (System.currentTimeMillis() - this.beginTime > this.delayTime) {
+                if (!this.currentShape.checkCollideBelow(this.height)) {
+                    this.collision = this.currentShape.checkVerticalForMovement(this.shapesFreeze);
+                    if (!collision) this.currentShape.moveDown();
+                } else {
+                    this.collision = true;
+                }
+                this.beginTime = System.currentTimeMillis();
             }
-            this.beginTime = System.currentTimeMillis();
         }
         this.notifyObservers();
     }
@@ -67,6 +72,19 @@ public class Board extends Observable {
                 this.shapesFreeze[bottomLine][col] = this.shapesFreeze[topLine][col];
             }
             if (count < this.shapesFreeze[0].length) bottomLine--;
+        }
+    }
+
+    private void checkOverGame() {
+        int[][] shape = this.currentShape.getElement();
+        for (int raw = 0; raw < shape.length; raw++) {
+            for (int col = 0; col < shape[0].length; col++) {
+                if (shape[raw][col] != 0) {
+                    if (this.shapesFreeze[raw + this.currentShape.getY()][col + this.currentShape.getX()] != null) {
+                        this.stateGame = StateGame.OVER;
+                    }
+                }
+            }
         }
     }
 
@@ -88,5 +106,14 @@ public class Board extends Observable {
 
     public int getHeight() {
         return height;
+    }
+
+    public StateGame getStateGame() {
+        return stateGame;
+    }
+
+    public void setStateGame(StateGame stateGame) {
+        this.stateGame = stateGame;
+        this.notifyObservers();
     }
 }
