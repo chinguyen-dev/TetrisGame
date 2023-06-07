@@ -1,6 +1,7 @@
 package model.patterns.observer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class Observable {
@@ -10,12 +11,12 @@ public abstract class Observable {
         this.observers = new ArrayList<>();
     }
 
-    public void addObserver(Observer observer) {
-        this.observers.add(observer);
+    public void addObserver(Observer... observer) {
+        this.observers.addAll(Arrays.asList(observer));
     }
 
-    public void removeObserver(Observer observer) {
-        this.observers.remove(observer);
+    public void removeObserver(Observer... observer) {
+        this.observers.removeAll(Arrays.asList(observer));
     }
 
     public void notifyObservers() {

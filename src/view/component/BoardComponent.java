@@ -62,12 +62,12 @@ public class BoardComponent extends JPanel {
     }
 
     public void drawShapeFreeze(Graphics g) {
-        Color[][] board = this.board.getBoard();
+        Color[][] shapesFreeze = this.board.getBoard();
         int blockSize = this.board.getCurrentShape().getSize();
-        for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board[row].length; col++) {
-                if (board[row][col] != null) {
-                    g.setColor(board[row][col]);
+        for (int row = 0; row < shapesFreeze.length; row++) {
+            for (int col = 0; col < shapesFreeze[row].length; col++) {
+                if (shapesFreeze[row][col] != null) {
+                    g.setColor(shapesFreeze[row][col]);
                     g.fillRect(col * blockSize, row * blockSize, blockSize, blockSize);
                 }
             }
