@@ -7,6 +7,7 @@ import java.awt.*;
 
 public class Board extends Observable {
     private final int width, height;
+    private int mouseX, mouseY, score;
     private final ShapeFactory shapeFactory;
     private final Color[][] shapesFreeze;
     private long beginTime;
@@ -20,9 +21,9 @@ public class Board extends Observable {
         this.width = width;
         this.height = height;
         this.delayTime = delayTime;
+        this.shapeFactory = ShapeFactory.getInstance();
         this.stateGame = StateGame.PLAY;
         this.shapesFreeze = new Color[this.height][this.width];
-        this.shapeFactory = ShapeFactory.getInstance();
         this.currentShape = this.getNewShape();
     }
 
@@ -71,7 +72,12 @@ public class Board extends Observable {
                 if (this.shapesFreeze[topLine][col] != null) count++;
                 this.shapesFreeze[bottomLine][col] = this.shapesFreeze[topLine][col];
             }
-            if (count < this.shapesFreeze[0].length) bottomLine--;
+            if (count < this.shapesFreeze[0].length) {
+                bottomLine--;
+            } else {
+                this.score += 10;
+                this.notifyObservers();
+            }
         }
     }
 
@@ -86,6 +92,17 @@ public class Board extends Observable {
                 }
             }
         }
+    }
+
+    public void refresh() {
+        this.score = 0;
+        for (int raw = 0; raw < this.shapesFreeze.length; raw++) {
+            for (int col = 0; col < this.shapesFreeze[raw].length; col++) {
+                this.shapesFreeze[raw][col] = null;
+            }
+        }
+        this.stateGame = StateGame.PLAY;
+        this.currentShape = this.getNewShape();
     }
 
     public Color[][] getShapesFreeze() {
@@ -114,6 +131,15 @@ public class Board extends Observable {
 
     public void setStateGame(StateGame stateGame) {
         this.stateGame = stateGame;
+        this.notifyObservers();
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
         this.notifyObservers();
     }
 }

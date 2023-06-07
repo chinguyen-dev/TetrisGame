@@ -1,11 +1,10 @@
 package controller;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 
 import model.Board;
 import model.StateGame;
-import view.component.BoardComponent;
+import view.BoardComponent;
 
 public class BoardController {
     private final Board board;
@@ -48,5 +47,4 @@ public class BoardController {
             }
         });
     }
-
 }
