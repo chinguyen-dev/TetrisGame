@@ -1,15 +1,24 @@
 package view.component;
 
+import model.AShape;
 import model.Board;
+import model.patterns.observer.Observable;
+import model.patterns.observer.Observer;
+import model.patterns.strategy.ObjectStrategy;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class BoardComponent extends JPanel {
+public class BoardComponent extends JPanel implements Observer, ObjectStrategy {
+    private AShape currentShape;
+    private Color[][] shapesFreeze;
+    private int boardHeight;
+    private int boardWidth;
     private final Board board;
 
     public BoardComponent(Board board) {
         this.board = board;
+        this.updateAttribute(board);
         this.setFocusable(true);
         this.start();
     }
@@ -36,14 +45,14 @@ public class BoardComponent extends JPanel {
     }
 
     public void drawShape(Graphics g) {
-        int[][] element = this.board.getCurrentShape().getElement();
-        int x = this.board.getCurrentShape().getX();
-        int y = this.board.getCurrentShape().getY();
-        int blockSize = this.board.getCurrentShape().getSize();
+        int[][] element = this.currentShape.getElement();
+        int x = this.currentShape.getX();
+        int y = this.currentShape.getY();
+        int blockSize = this.currentShape.getSize();
         for (int raw = 0; raw < element.length; raw++) {
             for (int col = 0; col < element[0].length; col++) {
                 if (element[raw][col] != 0) {
-                    g.setColor(this.board.getCurrentShape().getColor());
+                    g.setColor(this.currentShape.getColor());
                     g.fillRect(col * blockSize + x * blockSize, raw * blockSize + y * blockSize, blockSize, blockSize);
                 }
             }
@@ -52,25 +61,39 @@ public class BoardComponent extends JPanel {
 
     public void drawBoard(Graphics g) {
         g.setColor(Color.white);
-        int blockSize = this.board.getCurrentShape().getSize();
-        for (int raw = 0; raw < Board.BOARD_HEIGHT; raw++) {
-            g.drawLine(0, blockSize * raw, blockSize * Board.BOARD_WIDTH, blockSize * raw);
+        int blockSize = this.currentShape.getSize();
+        for (int raw = 0; raw < this.boardHeight; raw++) {
+            g.drawLine(0, blockSize * raw, blockSize * this.boardWidth, blockSize * raw);
         }
-        for (int col = 0; col < Board.BOARD_WIDTH + 1; col++) {
-            g.drawLine(blockSize * col, 0, blockSize * col, blockSize * Board.BOARD_HEIGHT);
+        for (int col = 0; col < this.boardWidth + 1; col++) {
+            g.drawLine(blockSize * col, 0, blockSize * col, blockSize * boardHeight);
         }
     }
 
     public void drawShapeFreeze(Graphics g) {
-        Color[][] shapesFreeze = this.board.getBoard();
-        int blockSize = this.board.getCurrentShape().getSize();
-        for (int row = 0; row < shapesFreeze.length; row++) {
-            for (int col = 0; col < shapesFreeze[row].length; col++) {
-                if (shapesFreeze[row][col] != null) {
-                    g.setColor(shapesFreeze[row][col]);
+        int blockSize = this.currentShape.getSize();
+        for (int row = 0; row < this.shapesFreeze.length; row++) {
+            for (int col = 0; col < this.shapesFreeze[row].length; col++) {
+                if (this.shapesFreeze[row][col] != null) {
+                    g.setColor(this.shapesFreeze[row][col]);
                     g.fillRect(col * blockSize, row * blockSize, blockSize, blockSize);
                 }
             }
+        }
+    }
+
+    @Override
+    public void update(Observable observable) {
+        this.updateAttribute(observable);
+    }
+
+    @Override
+    public void updateAttribute(Observable observable) {
+        if (observable instanceof Board b) {
+            this.shapesFreeze = b.getShapesFreeze();
+            this.currentShape = b.getCurrentShape();
+            this.boardWidth = b.getWidth();
+            this.boardHeight = b.getHeight();
         }
     }
 }

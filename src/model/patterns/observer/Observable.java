@@ -20,6 +20,6 @@ public abstract class Observable {
     }
 
     public void notifyObservers() {
-        for (Observer o : this.observers) o.update();
+        for (Observer o : this.observers) o.update(this);
     }
 }

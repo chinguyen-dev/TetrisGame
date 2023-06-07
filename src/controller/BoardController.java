@@ -10,8 +10,8 @@ public class BoardController {
     private final Board board;
     private final BoardComponent boardComponent;
 
-    public BoardController(BoardComponent component) {
-        this.board = Board.getInstance();
+    public BoardController(Board board, BoardComponent component) {
+        this.board = board;
         this.boardComponent = component;
         this.action();
     }
@@ -32,7 +32,7 @@ public class BoardController {
                     case KeyEvent.VK_RIGHT -> positionX = 1;
                     case KeyEvent.VK_LEFT -> positionX = -1;
                 }
-                board.getCurrentShape().moveHorizontal(positionX);
+                board.getCurrentShape().moveHorizontal(positionX, board.getWidth());
             }
 
             @Override

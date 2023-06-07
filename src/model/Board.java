@@ -6,25 +6,22 @@ import model.patterns.observer.Observable;
 import java.awt.*;
 
 public class Board extends Observable {
-    public static final int BOARD_WIDTH = 10, BOARD_HEIGHT = 20;
-    private static Board instance;
+    private int width, height;
     private final ShapeFactory shapeFactory;
     private final Color[][] shapesFreeze;
     private long beginTime;
-    private int delayTime = 600;
+    private int delayTime;
     private boolean collision = false;
     private AShape currentShape;
 
-    private Board() {
+    public Board(int width, int height, int delayTime) {
         super();
-        this.shapesFreeze = new Color[BOARD_HEIGHT][BOARD_WIDTH];
+        this.width = width;
+        this.height = height;
+        this.delayTime = delayTime;
+        this.shapesFreeze = new Color[this.height][this.width];
         this.shapeFactory = ShapeFactory.getInstance();
         this.currentShape = this.getNewShape();
-    }
-
-    public static synchronized Board getInstance() {
-        if (instance == null) instance = new Board();
-        return instance;
     }
 
     public void createNewShape() {
@@ -50,7 +47,7 @@ public class Board extends Observable {
     public void state() {
         this.createNewShape();
         if (System.currentTimeMillis() - this.beginTime > this.delayTime) {
-            if (!this.currentShape.checkCollideBelow()) {
+            if (!this.currentShape.checkCollideBelow(this.height)) {
                 this.collision = this.currentShape.checkVerticalForMovement(this.shapesFreeze);
                 if (!collision) this.currentShape.moveDown();
             } else {
@@ -58,6 +55,7 @@ public class Board extends Observable {
             }
             this.beginTime = System.currentTimeMillis();
         }
+        this.notifyObservers();
     }
 
     private void checkLine() {
@@ -72,7 +70,7 @@ public class Board extends Observable {
         }
     }
 
-    public Color[][] getBoard() {
+    public Color[][] getShapesFreeze() {
         return this.shapesFreeze;
     }
 
@@ -82,5 +80,13 @@ public class Board extends Observable {
 
     public void setDelayTime(int delayTime) {
         this.delayTime = delayTime;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }
