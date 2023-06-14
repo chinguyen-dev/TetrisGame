@@ -1,11 +1,18 @@
 package model.patterns.builder.game;
 
+import controller.IController;
+import model.Board;
 import view.Game;
 
+import javax.swing.*;
+
 public class GameBuilder implements IGameBuilder {
-    private String title;
-    private int width;
-    private int height;
+    protected String title;
+    protected int width;
+    protected int height;
+    protected Board model;
+    private IController controller;
+    private JPanel component;
 
     @Override
     public GameBuilder title(String title) {
@@ -26,7 +33,25 @@ public class GameBuilder implements IGameBuilder {
     }
 
     @Override
+    public GameBuilder model(Board model) {
+        this.model = model;
+        return this;
+    }
+
+    @Override
+    public GameBuilder controller(IController controller) {
+        this.controller = controller;
+        return this;
+    }
+
+    @Override
+    public GameBuilder component(JPanel component) {
+        this.component = component;
+        return this;
+    }
+
+    @Override
     public Game build() {
-        return new Game(this.title, this.width, this.height);
+        return new Game(this.title, this.width, this.height, this.model, this.controller, this.component);
     }
 }

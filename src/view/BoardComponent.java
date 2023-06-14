@@ -1,31 +1,31 @@
 package view;
 
-import controller.GameController;
+import controller.IController;
 import model.AShape;
 import model.Board;
 import model.ImageLoader;
 import model.StateGame;
-import model.patterns.observer.*;
-import model.patterns.strategy.ObjectStrategy;
+import model.patterns.builder.rectangle.RectangleBuilder;
+import model.patterns.observer.Observable;
+import model.patterns.observer.Observer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-public class BoardComponent extends JPanel implements Observer, ObjectStrategy {
+public class BoardComponent extends JPanel implements Observer {
     private BufferedImage pause, refresh;
     private Rectangle stopBounds, refreshBounds;
     private AShape currentShape;
     private Color[][] shapesFreeze;
     private int boardHeight, boardWidth, score;
     private StateGame stateGame;
-
     public BoardComponent(Board board) {
         this.setAttributes(board);
         this.initialImage();
         this.setFocusable(true);
-        Timer timer = new Timer(1000 / 60, new GameController(board, this));
-        timer.start();
     }
 
     @Override
@@ -107,9 +107,18 @@ public class BoardComponent extends JPanel implements Observer, ObjectStrategy {
     private void initialImage() {
         this.pause = ImageLoader.loadImage("/Pause.png");
         this.refresh = ImageLoader.loadImage("/refresh.png");
-        this.stopBounds = new Rectangle(350, 500, this.pause.getWidth(), this.pause.getHeight() + this.pause.getHeight() / 2);
-        this.refreshBounds = new Rectangle(350, 500 - this.refresh.getHeight() - 20, this.refresh.getWidth(),
-                this.refresh.getHeight() + this.refresh.getHeight() / 2);
+        this.stopBounds = new RectangleBuilder()
+                .positionX(350)
+                .positionY(500)
+                .width(this.pause.getWidth())
+                .height(this.pause.getHeight() + this.pause.getHeight() / 2)
+                .build();
+        this.refreshBounds = new RectangleBuilder()
+                .positionX(350)
+                .positionY(500 - this.refresh.getHeight() - 20)
+                .width(this.refresh.getWidth())
+                .height(this.refresh.getHeight() + this.refresh.getHeight() / 2)
+                .build();
     }
 
     @Override

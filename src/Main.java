@@ -1,12 +1,14 @@
-import model.patterns.builder.game.GameBuilder;
-import view.Game;
+import controller.GameController;
+import model.Board;
+import model.patterns.builder.board.BoardBuilder;
 
 public class Main {
     public static void main(String[] args) {
-        Game g = new GameBuilder()
-                .title("Tetris Game")
-                .width(445)
-                .height(629)
+        Board model = new BoardBuilder()
+                .width(10)
+                .height(20)
+                .delayTime(600)
                 .build();
+        new GameController(model).start();
     }
 }

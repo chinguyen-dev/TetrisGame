@@ -3,11 +3,12 @@ package model;
 import model.patterns.factory.ShapeFactory;
 import model.patterns.observer.Observable;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class Board extends Observable {
     private final int width, height;
-    private int mouseX, mouseY, score;
+    private int score;
     private final ShapeFactory shapeFactory;
     private final Color[][] shapesFreeze;
     private long beginTime;
@@ -25,8 +26,8 @@ public class Board extends Observable {
         this.stateGame = StateGame.PLAY;
         this.shapesFreeze = new Color[this.height][this.width];
         this.currentShape = this.getNewShape();
-    }
 
+    }
     private void createNewShape() {
         if (this.collision) {
             int[][] element = this.currentShape.getElement();
@@ -39,8 +40,8 @@ public class Board extends Observable {
             }
             this.checkLine();
             this.currentShape = this.getNewShape();
-            this.collision = !this.collision;
             this.checkOverGame();
+            this.collision = !this.collision;
         }
     }
 
@@ -131,15 +132,9 @@ public class Board extends Observable {
 
     public void setStateGame(StateGame stateGame) {
         this.stateGame = stateGame;
-        this.notifyObservers();
     }
 
     public int getScore() {
         return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-        this.notifyObservers();
     }
 }

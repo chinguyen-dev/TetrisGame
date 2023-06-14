@@ -8,7 +8,6 @@ import java.awt.*;
 public class ShapeFactory {
     private static ShapeFactory instance;
     private final IShapeFactory iShape;
-
     private ShapeFactory() {
         this.iShape = ShapeFactoryImpl.getInstance();
     }
@@ -17,7 +16,6 @@ public class ShapeFactory {
         Color color = this.iShape.getRandomColor();
         return this.iShape.generateShape(shapeType, color);
     }
-
     public static synchronized ShapeFactory getInstance() {
         if (instance == null) instance = new ShapeFactory();
         return instance;

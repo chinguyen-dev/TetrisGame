@@ -1,20 +1,18 @@
 package view;
 
-import javax.swing.JFrame;
+import controller.IController;
 import model.Board;
-import model.patterns.builder.board.BoardBuilder;
+import model.patterns.observer.Observer;
+
+import javax.swing.*;
 
 public class Game extends JFrame {
-    private final BoardComponent boardComponent;
-    private final Board modelMain;
+    private final JPanel component;
+    private final Board model;
 
-    public Game(String title, int width, int height) {
-        this.modelMain = new BoardBuilder()
-                .width(10)
-                .height(20)
-                .delayTime(600)
-                .build();
-        this.boardComponent = new BoardComponent(modelMain);
+    public Game(String title, int width, int height, Board model, IController controller, JPanel component) {
+        this.model = model;
+        this.component = component;
         this.registerObservable();
         this.initialize(title, width, height);
     }
@@ -25,11 +23,11 @@ public class Game extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
-        this.add(this.boardComponent);
+        this.add(this.component);
         this.setVisible(true);
     }
 
     public void registerObservable() {
-        this.modelMain.addObserver(this.boardComponent);
+        this.model.addObserver((Observer) this.component);
     }
 }
