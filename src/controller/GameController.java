@@ -12,27 +12,27 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class GameController implements IController {
-    private final Board board;
+    private final Board model;
     private final BoardComponent component;
     private final Timer timer;
 
     public GameController(Board board) {
-        this.board = board;
+        this.model = board;
         this.component = new BoardComponent(board);
         this.actionMouse();
         this.actionKey();
-        JFrame view = new GameBuilder()
+        this.timer = new Timer(1000 / 60, e -> {
+            this.model.state();
+            this.component.repaint();
+        });
+        new GameBuilder()
                 .title("Tetris Game")
                 .width(445)
-                .height(629)
+                .height(640)
                 .model(board)
                 .controller(this)
                 .component(this.component)
                 .build();
-        this.timer = new Timer(1000 / 60, e -> {
-            this.board.state();
-            this.component.repaint();
-        });
     }
 
     @Override
@@ -47,7 +47,7 @@ public class GameController implements IController {
 
     @Override
     public void refresh() {
-        this.board.refresh();
+        this.model.refresh();
     }
 
     @Override
@@ -61,23 +61,23 @@ public class GameController implements IController {
             @Override
             public void keyReleased(KeyEvent e) {
                 int positionX = 0;
-                StateGame stateGame = board.getStateGame();
+                StateGame stateGame = model.getStateGame();
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_DOWN -> board.setDelayTime(600);
+                    case KeyEvent.VK_DOWN -> model.setDelayTime(600);
                     case KeyEvent.VK_RIGHT -> positionX = 1;
                     case KeyEvent.VK_LEFT -> positionX = -1;
                     case KeyEvent.VK_SPACE -> {
-                        if (board.getStateGame() == StateGame.PLAY) stateGame = StateGame.PAUSE;
-                        if (board.getStateGame() == StateGame.PAUSE) stateGame = StateGame.PLAY;
+                        if (model.getStateGame() == StateGame.PLAY) stateGame = StateGame.PAUSE;
+                        if (model.getStateGame() == StateGame.PAUSE) stateGame = StateGame.PLAY;
                     }
                 }
-                board.setStateGame(stateGame);
-                board.getCurrentShape().moveHorizontal(positionX, board.getWidth());
+                model.setStateGame(stateGame);
+                model.getCurrentShape().moveHorizontal(positionX, model.getWidth());
             }
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_DOWN) board.setDelayTime(50);
+                if (e.getKeyCode() == KeyEvent.VK_DOWN) model.setDelayTime(50);
             }
         });
     }
@@ -89,10 +89,10 @@ public class GameController implements IController {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if (component.getStopBounds().contains(e.getX(), e.getY())) {
-                    if (board.getStateGame() == StateGame.PLAY) {
-                        board.setStateGame(StateGame.PAUSE);
-                    } else if (board.getStateGame() == StateGame.PAUSE) {
-                        board.setStateGame(StateGame.PLAY);
+                    if (model.getStateGame() == StateGame.PLAY) {
+                        model.setStateGame(StateGame.PAUSE);
+                    } else if (model.getStateGame() == StateGame.PAUSE) {
+                        model.setStateGame(StateGame.PLAY);
                     }
                 }
                 if (component.getRefreshBounds().contains(e.getX(), e.getY())) refresh();

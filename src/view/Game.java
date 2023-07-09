@@ -15,6 +15,7 @@ public class Game extends JFrame {
         this.component = component;
         this.registerObservable();
         this.initialize(title, width, height);
+        controller.start();
     }
 
     public void initialize(String title, int width, int height) {

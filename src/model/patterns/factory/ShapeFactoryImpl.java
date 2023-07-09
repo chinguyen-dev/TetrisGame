@@ -50,7 +50,7 @@ public class ShapeFactoryImpl implements IShapeFactory {
         return shape;
     }
 
-    public static synchronized ShapeFactoryImpl getInstance() {
+    public static ShapeFactoryImpl getInstance() {
         if (instance == null) instance = new ShapeFactoryImpl();
         return instance;
     }

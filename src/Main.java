@@ -9,6 +9,6 @@ public class Main {
                 .height(20)
                 .delayTime(600)
                 .build();
-        new GameController(model).start();
+        new GameController(model);
     }
 }

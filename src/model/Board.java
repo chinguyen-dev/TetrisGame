@@ -8,12 +8,11 @@ import java.awt.*;
 
 public class Board extends Observable {
     private final int width, height;
-    private int score;
     private final ShapeFactory shapeFactory;
     private final Color[][] shapesFreeze;
     private long beginTime;
     private StateGame stateGame;
-    private int delayTime;
+    private int delayTime, score;
     private boolean collision = false;
     private AShape currentShape;
 
@@ -26,8 +25,8 @@ public class Board extends Observable {
         this.stateGame = StateGame.PLAY;
         this.shapesFreeze = new Color[this.height][this.width];
         this.currentShape = this.getNewShape();
-
     }
+
     private void createNewShape() {
         if (this.collision) {
             int[][] element = this.currentShape.getElement();
@@ -137,4 +136,5 @@ public class Board extends Observable {
     public int getScore() {
         return score;
     }
+
 }

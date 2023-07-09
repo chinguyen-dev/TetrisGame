@@ -1,6 +1,5 @@
 package view;
 
-import controller.IController;
 import model.AShape;
 import model.Board;
 import model.ImageLoader;
@@ -11,8 +10,6 @@ import model.patterns.observer.Observer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 public class BoardComponent extends JPanel implements Observer {
@@ -22,8 +19,9 @@ public class BoardComponent extends JPanel implements Observer {
     private Color[][] shapesFreeze;
     private int boardHeight, boardWidth, score;
     private StateGame stateGame;
-    public BoardComponent(Board board) {
-        this.setAttributes(board);
+
+    public BoardComponent(Observable observable) {
+        this.setAttributes(observable);
         this.initialImage();
         this.setFocusable(true);
     }
@@ -70,7 +68,7 @@ public class BoardComponent extends JPanel implements Observer {
     private void drawBoard(Graphics g) {
         g.setColor(Color.white);
         int blockSize = this.currentShape.getSize();
-        for (int raw = 0; raw < this.boardHeight; raw++) {
+        for (int raw = 0; raw < this.boardHeight + 1; raw++) {
             g.drawLine(0, blockSize * raw, blockSize * this.boardWidth, blockSize * raw);
         }
         for (int col = 0; col < this.boardWidth + 1; col++) {
